@@ -82,7 +82,7 @@ O **RPG Runner** é um endless runner 3D com elementos de RPG desenvolvido em Un
 
 ## Tecnologias
 
-- **Engine:** Unity 6.0 (URP)
+- **Engine:** Unity 6000.5.1f1 (URP)
 - **Linguagem:** C#
 - **Input System:** Unity New Input System
 - **Persistência:** PlayerPrefs
