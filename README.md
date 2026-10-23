@@ -69,6 +69,14 @@ O **RPG Runner** é um endless runner 3D com elementos de RPG desenvolvido em Un
 - Seleção de personagem com animações (Idle (Personagens não selecionados) / Waving (Personagem selecionado))
 - Tela de instruções
 - Botão de sair
+- **Botão PERSONALIZAR** (XP Week Halloween): o aluno escolhe a skin do personagem entre os assets da pasta `Assets/Resources/HalloweenAssets`
+
+### Personalização de Skins (Halloween)
+- As skins são texturas `.png` na pasta `Assets/Resources/HalloweenAssets`, no padrão `<classe>_<skin>.png` (ex.: `mage_abobora.png`; classes: `knight`, `barbarian`, `mage`)
+- Skins incluídas: original, abóbora, fantasma, zumbi, vampiro e bruxa
+- Para criar uma skin nova, basta colocar `<classe>_<nome>.png` na pasta: ela aparece sozinha no botão PERSONALIZAR do menu
+- A escolha é salva em `PlayerPrefs` (`SkinEscolhida`) e aplicada ao personagem na partida (`SkinService`, `SeletorSkinUI`)
+- Para regenerar o pacote de skins: `python3 Tools/gerar_skins_halloween.py`
 
 ---
 

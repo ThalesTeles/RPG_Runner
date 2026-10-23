@@ -8,6 +8,7 @@ public class SpawnPersonagem : MonoBehaviour
     void Start()
     {
         int indice = PlayerPrefs.GetInt("PersonagemEscolhido", 0);
-        Instantiate(prefabsPersonagens[indice], pontoSpawn.position, pontoSpawn.rotation);
+        GameObject jogador = Instantiate(prefabsPersonagens[indice], pontoSpawn.position, pontoSpawn.rotation);
+        SkinService.Aplicar(jogador); // aplica a skin escolhida no menu (botao PERSONALIZAR)
     }
 }
