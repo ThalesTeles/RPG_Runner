@@ -30,10 +30,10 @@ CLASSES = {
 
 # skin -> (matiz alvo em graus, mult. saturacao, mult. brilho, cor p/ tingir cinzas, forca do tingimento)
 TEMAS = {
-    "abobora":  (28.0, 1.20, 1.05, (255, 140, 40), 0.22),
+    "abobora":  (28.0, 1.55, 1.05, (255, 130, 20), 0.40),
     "fantasma": (190.0, 0.25, 1.30, (190, 230, 255), 0.40),
     "zumbi":    (100.0, 0.85, 0.85, (110, 140, 70), 0.28),
-    "vampiro":  (352.0, 1.05, 0.70, (90, 10, 20), 0.30),
+    "vampiro":  (352.0, 1.10, 0.85, (90, 10, 20), 0.30),
     "bruxa":    (275.0, 1.00, 0.90, (120, 60, 160), 0.25),
 }
 
