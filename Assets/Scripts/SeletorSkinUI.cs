@@ -42,7 +42,7 @@ public class SeletorSkinUI : MonoBehaviour
     private static void CriarSeForMenu(Scene cena)
     {
         if (cena.name != NomeCenaMenu) return;
-        if (FindFirstObjectByType<SeletorSkinUI>() != null) return;
+        if (FindAnyObjectByType<SeletorSkinUI>() != null) return;
         new GameObject("SeletorSkinUI").AddComponent<SeletorSkinUI>();
     }
 

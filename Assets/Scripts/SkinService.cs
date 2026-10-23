@@ -61,7 +61,7 @@ public static class SkinService
     /// <summary>Aplica a skin escolhida em todos os personagens da cena atual (usado no menu).</summary>
     public static void AplicarNaCena()
     {
-        Renderer[] todos = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        Renderer[] todos = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include);
         Aplicar(todos, SkinAtual);
     }
 
@@ -77,7 +77,7 @@ public static class SkinService
             bool precisaTrocar = false;
             foreach (Material m in compartilhados)
             {
-                if (m != null && TexturaNova(m.mainTexture, skin) != null)
+                if (m != null && TexturaNova(TexturaBase(m), skin) != null)
                 {
                     precisaTrocar = true;
                     break;
@@ -89,13 +89,19 @@ public static class SkinService
             foreach (Material m in materiais)
             {
                 if (m == null) continue;
-                Texture2D nova = TexturaNova(m.mainTexture, skin);
+                Texture2D nova = TexturaNova(TexturaBase(m), skin);
                 if (nova == null) continue;
 
-                m.mainTexture = nova;
                 if (m.HasProperty("_BaseMap")) m.SetTexture("_BaseMap", nova); // shaders URP/Lit
+                else m.mainTexture = nova;
             }
         }
+    }
+
+    // Textura de cor do material: _BaseMap no URP/Lit, mainTexture nos demais shaders.
+    private static Texture TexturaBase(Material m)
+    {
+        return m.HasProperty("_BaseMap") ? m.GetTexture("_BaseMap") : m.mainTexture;
     }
 
     // Retorna a textura da skin equivalente a textura atual, ou null se nao ha o que trocar.
