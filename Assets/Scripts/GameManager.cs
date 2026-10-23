@@ -32,14 +32,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        timerAumento += Time.deltaTime;
-
-        if (timerAumento >= intervaloAumento)
-        {
-            timerAumento = 0f;
-            velocidadeBase = Mathf.Min(velocidadeBase + incrementoVelocidade, velocidadeMaxima);
-            ChanceSpawnAtual = Mathf.Min(ChanceSpawnAtual + incrementoChance, chanceSpawnMaxima);
-        }
+        // TODO [PASSO 4 - DIFICULDADE PROGRESSIVA]
+        //  - some Time.deltaTime em timerAumento a cada frame
+        //  - quando timerAumento >= intervaloAumento: zere o timer e aumente a dificuldade
+        //      * velocidadeBase    += incrementoVelocidade  (nunca passando de velocidadeMaxima)
+        //      * ChanceSpawnAtual  += incrementoChance      (nunca passando de chanceSpawnMaxima)
+        //  Dica: Mathf.Min(valor, limite) resolve o "nunca passando".
     }
 
     public void PararJogo()

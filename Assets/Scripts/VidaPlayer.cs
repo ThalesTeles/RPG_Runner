@@ -45,45 +45,34 @@ public class VidaPlayer : MonoBehaviour
     {
         if (morreu) return;
 
-        if (other.CompareTag("obstacle") || other.CompareTag("enemy"))
-        {
-            if (habilidadeEscudo != null && habilidadeEscudo.EscudoAtivo) return;
-            if (habilidadeBarbaro != null && habilidadeBarbaro.habilidadeAtiva) return;
-            if (!invulneravel) TomarDano();
-        }
+        // TODO [PASSO 1 - COLISAO]
+        // Detecte a batida do jogador com algo perigoso e chame TomarDano() quando o dano deve valer.
+        //  - o objeto "other" e perigoso se tiver a tag "obstacle" ou "enemy"
+        //  - NAO leva dano se o escudo do Lutador estiver ativo (habilidadeEscudo.EscudoAtivo)
+        //  - NAO leva dano se o dash do Barbaro estiver ativo (habilidadeBarbaro.habilidadeAtiva)
+        //  - NAO leva dano enquanto estiver invulneravel
+        //  Dica: habilidadeEscudo e habilidadeBarbaro podem ser null (nem toda classe tem as duas).
     }
 
     private void TomarDano()
     {
-        vidasAtuais--;
-        invulneravel = true;
-        timerInvulneravel = tempoInvulnerabilidade;
-
-        AtualizarHUD();
-        Debug.Log($"Tomou dano! Vidas restantes: {vidasAtuais}");
-
-        if (vidasAtuais <= 0)
-            IniciarMorte();
+        // TODO [PASSO 2 - DANO]
+        //  - tire 1 de vidasAtuais
+        //  - deixe o jogador invulneravel por tempoInvulnerabilidade segundos
+        //    (invulneravel = true e timerInvulneravel = tempoInvulnerabilidade; o Update ja faz a contagem)
+        //  - atualize a barra de vida chamando AtualizarHUD()
+        //  - se vidasAtuais chegou a 0 (ou menos), chame IniciarMorte()
     }
 
     private void IniciarMorte()
     {
-        morreu = true;
-        MovimentoPlayer movimento = GetComponent<MovimentoPlayer>();
-        if (movimento != null)
-        {
-          movimento.enabled = false;
-        }
-
-        if (GerarMapa.instancia != null)
-            GerarMapa.instancia.PararGeracao();
-        if (GameManager.instancia != null)
-            GameManager.instancia.PararJogo();
-
-        if (animator != null)
-            animator.SetTrigger("morreu");
-
-        Invoke(nameof(IrParaMorte), tempoAteMorte);
+        // TODO [PASSO 3 - GAME OVER]
+        //  - marque morreu = true (assim OnTriggerEnter para de funcionar)
+        //  - desligue o componente MovimentoPlayer deste objeto (GetComponent + enabled = false)
+        //  - pare o mapa: GerarMapa.instancia.PararGeracao()   e o jogo: GameManager.instancia.PararJogo()
+        //    (as instancias podem ser null: confira antes de chamar)
+        //  - toque a animacao de morte: animator.SetTrigger("morreu")
+        //  - depois de tempoAteMorte segundos, va para a tela de Game Over: Invoke(nameof(IrParaMorte), tempoAteMorte)
     }
 
     private void IrParaMorte()
