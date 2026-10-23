@@ -11,8 +11,7 @@
 - Branch da aula: **`xp-week-halloween`** (jogo "quebrado" para os alunos).
 - Branch do gabarito: **`xp-week-solucao`** (jogo completo, **não** entregar aos alunos).
 - Versão do Unity: **6000.5.1f1** (a mesma de `ProjectSettings/ProjectVersion.txt`).
-- Abra a cena `Assets/Scenes/Menu.unity` e dê Play. Na primeira abertura o Unity cria os arquivos `.meta` das skins novas
-  (pasta `Assets/Resources/HalloweenAssets`); isso é normal.
+- Abra a cena `Assets/Scenes/Menu.unity` e dê Play. A primeira abertura demora alguns minutos (importação e shaders); isso é normal.
 
 ## 2. O que está faltando no código (e onde)
 
@@ -42,6 +41,8 @@ Os pontos estão marcados com `// TODO [PASSO N - ...]`.
 - Passo 1+2: bata num obstáculo → a vida na tela diminui e o personagem fica invulnerável por ~1,5 s.
 - Passo 3: perca todas as vidas → animação de morte e, em ~2 s, vai para a cena **Morte**.
 - Passo 4: jogue ~30 s → o cenário passa a vir mais rápido e com mais obstáculos.
+- Conferência automática: **Window → General → Test Runner → PlayMode → Run All**. Os testes `JogabilidadeTests`
+  (um por passo) começam vermelhos e ficam verdes conforme o aluno completa os passos 1 a 4.
 
 ## 4. Asset Pack de Halloween e botão PERSONALIZAR (parte "Diretor de Arte")
 
