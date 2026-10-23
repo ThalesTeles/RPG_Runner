@@ -10,7 +10,7 @@
 
 - Branch da aula: **`xp-week-halloween`** (jogo "quebrado" para os alunos).
 - Branch do gabarito: **`xp-week-solucao`** (jogo completo, **não** entregar aos alunos).
-- Versão do Unity: **6000.3.13f1** (a mesma de `ProjectSettings/ProjectVersion.txt`).
+- Versão do Unity: **6000.5.1f1** (a mesma de `ProjectSettings/ProjectVersion.txt`).
 - Abra a cena `Assets/Scenes/Menu.unity` e dê Play. Na primeira abertura o Unity cria os arquivos `.meta` das skins novas
   (pasta `Assets/Resources/HalloweenAssets`); isso é normal.
 
