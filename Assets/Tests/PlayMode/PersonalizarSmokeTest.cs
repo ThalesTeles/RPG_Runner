@@ -51,6 +51,48 @@ public class PersonalizarSmokeTest
         go.GetComponent<Button>().onClick.Invoke();
     }
 
+    private static Rect RetanguloNaTela(string nome)
+    {
+        GameObject go = GameObject.Find(nome);
+        Assert.IsNotNull(go, nome + " nao encontrado");
+        var rt = go.GetComponent<RectTransform>();
+        Canvas raiz = rt.GetComponentInParent<Canvas>().rootCanvas;
+        Camera cam = raiz.renderMode == RenderMode.ScreenSpaceOverlay ? null : raiz.worldCamera;
+        var cantos = new Vector3[4];
+        rt.GetWorldCorners(cantos);
+        Vector2 min = RectTransformUtility.WorldToScreenPoint(cam, cantos[0]), max = min;
+        for (int i = 1; i < 4; i++)
+        {
+            Vector2 p = RectTransformUtility.WorldToScreenPoint(cam, cantos[i]);
+            min = Vector2.Min(min, p);
+            max = Vector2.Max(max, p);
+        }
+        return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+    }
+
+    [UnityTest]
+    public IEnumerator Menu_BotaoPersonalizarFicaAbaixoDoLivroSemSobrepor()
+    {
+        yield return SceneManager.LoadSceneAsync("Menu");
+        yield return null;
+        yield return null; // CanvasScaler e LateUpdate do SeletorSkinUI
+
+        Rect botao = RetanguloNaTela("BotaoPersonalizar");
+        Rect livro = RetanguloNaTela("botaoInstru");
+        Rect jogar = RetanguloNaTela("botaoJogar");
+        string info = $"tela {Screen.width}x{Screen.height} botao {botao} livro {livro} jogar {jogar}";
+
+        Assert.LessOrEqual(botao.yMax, livro.yMin + 1f, "o botao deveria ficar abaixo do livro. " + info);
+        Assert.AreEqual(livro.xMax, botao.xMax, 2f, "o botao deveria alinhar pela direita com o livro. " + info);
+        Assert.AreEqual(jogar.height * 0.75f, botao.height, 2f, "altura proporcional ao JOGAR. " + info);
+        Assert.GreaterOrEqual(botao.xMin, 0f, "o botao saiu da tela. " + info);
+        Assert.GreaterOrEqual(botao.yMin, 0f, "o botao saiu da tela. " + info);
+        foreach (string outro in new[] { "botaoJogar", "botaoInstru", "botaoMago", "botaoLutador", "botaoBarbaro" })
+            Assert.IsFalse(botao.Overlaps(RetanguloNaTela(outro)), "o botao sobrepoe " + outro + ". " + info);
+        Assert.IsNotNull(GameObject.Find("BotaoPersonalizar").GetComponent<UnityEngine.UI.Image>().sprite,
+            "o botao deveria usar a arte de Resources/UI/botaoPersonalizar");
+    }
+
     [UnityTest]
     public IEnumerator Menu_EscolherSkin_AplicaNoMenuENaCena()
     {

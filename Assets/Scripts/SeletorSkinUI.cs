@@ -15,6 +15,9 @@ using UnityEngine.UI;
 public class SeletorSkinUI : MonoBehaviour
 {
     private const string NomeCenaMenu = "Menu";
+    private const string CaminhoSpriteBotao = "UI/botaoPersonalizar"; // Assets/Resources/UI/botaoPersonalizar.png
+    private const float AlturaRelativaAoJogar = 0.75f; // altura do botao em relacao ao botao JOGAR
+    private const float EspacoAbaixoDoLivro = 12f;     // em pixels de tela
 
     private static readonly Color CorFundoCartao = new Color(0.20f, 0.12f, 0.30f, 1f);
     private static readonly Color CorCartaoSelecionado = new Color(1f, 0.50f, 0.05f, 1f);
@@ -23,6 +26,15 @@ public class SeletorSkinUI : MonoBehaviour
 
     private GameObject painel;
     private readonly Dictionary<string, Image> cartoes = new Dictionary<string, Image>();
+
+    // botao PERSONALIZAR e as referencias do menu usadas para posiciona-lo
+    private RectTransform canvasRect;
+    private RectTransform botaoRect;
+    private float proporcaoBotao = 300f / 105f;
+    private RectTransform botaoInstru;
+    private RectTransform botaoJogar;
+    private GameObject painelInstrucoes;
+    private static readonly Vector3[] cantos = new Vector3[4];
 
     // ---------- criacao automatica no menu ----------
 
@@ -53,6 +65,14 @@ public class SeletorSkinUI : MonoBehaviour
         SkinService.AplicarNaCena(); // mostra no menu a skin que ja estava salva
         ConstruirUI();
         painel.SetActive(false);
+    }
+
+    private void LateUpdate()
+    {
+        // recalculado todo frame: o Canvas do menu usa camera com perspectiva e a janela pode mudar de tamanho
+        PosicionarBotao();
+        if (painelInstrucoes != null)
+            botaoRect.gameObject.SetActive(!painelInstrucoes.activeInHierarchy);
     }
 
     // ---------- logica ----------
@@ -94,9 +114,10 @@ public class SeletorSkinUI : MonoBehaviour
 
     private void ConstruirUI()
     {
-        GameObject canvasGO = new GameObject("CanvasSkins");
+        GameObject canvasGO = new GameObject("CanvasSkins", typeof(RectTransform));
         canvasGO.transform.SetParent(transform, false);
 
+        canvasRect = canvasGO.GetComponent<RectTransform>();
         Canvas canvas = canvasGO.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 100;
@@ -109,12 +130,85 @@ public class SeletorSkinUI : MonoBehaviour
 
         canvasGO.AddComponent<GraphicRaycaster>();
 
-        // botao fixo no menu (lado esquerdo, espelhando o botao de instrucoes)
-        GameObject botao = CriarBotao(canvasGO.transform, "BotaoPersonalizar", "PERSONALIZAR", CorRoxo, 34f);
-        PosicionarCentro(botao, new Vector2(-610f, 237f), new Vector2(300f, 105f));
+        // botao com a mesma arte do JOGAR, logo abaixo do botao de instrucoes (livro)
+        GameObject botao = CriarBotaoPersonalizar(canvasGO.transform);
+        botaoRect = botao.GetComponent<RectTransform>();
         botao.GetComponent<Button>().onClick.AddListener(AlternarPainel);
 
+        botaoInstru = AcharRect("botaoInstru");
+        botaoJogar = AcharRect("botaoJogar");
+        if (botaoInstru != null)
+        {
+            Transform raiz = botaoInstru.GetComponentInParent<Canvas>().rootCanvas.transform;
+            Transform instrucoes = raiz.Find("painelInstrucoes");
+            if (instrucoes != null) painelInstrucoes = instrucoes.gameObject;
+        }
+        PosicionarBotao();
+
         ConstruirPainel(canvasGO.transform);
+    }
+
+    private GameObject CriarBotaoPersonalizar(Transform pai)
+    {
+        Sprite sprite = Resources.Load<Sprite>(CaminhoSpriteBotao);
+        if (sprite == null) // sem a arte: botao simples, para o menu nunca ficar sem o botao
+            return CriarBotao(pai, "BotaoPersonalizar", "PERSONALIZAR", CorRoxo, 34f);
+
+        GameObject go = new GameObject("BotaoPersonalizar", typeof(RectTransform));
+        go.transform.SetParent(pai, false);
+        Image img = go.AddComponent<Image>();
+        img.sprite = sprite;
+        img.preserveAspect = true;
+        Button botao = go.AddComponent<Button>();
+        botao.targetGraphic = img;
+        proporcaoBotao = sprite.rect.width / sprite.rect.height;
+        return go;
+    }
+
+    // Coloca o botao abaixo do livro, alinhado pela direita, com altura proporcional ao botao JOGAR.
+    // As contas sao feitas em pixels de tela porque o Canvas do menu e do tipo Screen Space - Camera.
+    private void PosicionarBotao()
+    {
+        if (!RetanguloNaTela(botaoInstru, out Rect livro) || !RetanguloNaTela(botaoJogar, out Rect jogar))
+        {
+            PosicionarCentro(botaoRect.gameObject, new Vector2(790f, 140f), new Vector2(300f, 300f / proporcaoBotao));
+            return;
+        }
+
+        float altura = jogar.height * AlturaRelativaAoJogar;
+        float largura = altura * proporcaoBotao;
+        Vector2 cantoSupDir = new Vector2(livro.xMax, livro.yMin - EspacoAbaixoDoLivro);
+        Vector2 cantoInfEsq = cantoSupDir - new Vector2(largura, altura);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, cantoSupDir, null, out Vector2 supDir);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, cantoInfEsq, null, out Vector2 infEsq);
+        PosicionarCentro(botaoRect.gameObject, (supDir + infEsq) * 0.5f, supDir - infEsq);
+    }
+
+    private static RectTransform AcharRect(string nome)
+    {
+        GameObject go = GameObject.Find(nome);
+        return go != null ? go.GetComponent<RectTransform>() : null;
+    }
+
+    private static bool RetanguloNaTela(RectTransform rt, out Rect tela)
+    {
+        tela = default;
+        if (rt == null) return false;
+
+        Canvas raiz = rt.GetComponentInParent<Canvas>().rootCanvas;
+        Camera cam = raiz.renderMode == RenderMode.ScreenSpaceOverlay ? null : raiz.worldCamera;
+        rt.GetWorldCorners(cantos);
+        Vector2 min = RectTransformUtility.WorldToScreenPoint(cam, cantos[0]);
+        Vector2 max = min;
+        for (int i = 1; i < 4; i++)
+        {
+            Vector2 p = RectTransformUtility.WorldToScreenPoint(cam, cantos[i]);
+            min = Vector2.Min(min, p);
+            max = Vector2.Max(max, p);
+        }
+        tela = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        return true;
     }
 
     private void ConstruirPainel(Transform pai)
