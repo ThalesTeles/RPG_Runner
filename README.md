@@ -46,11 +46,6 @@ O **RPG Runner** é um endless runner 3D com elementos de RPG desenvolvido em Un
 - Inimigos: Goblin e Esqueleto
 - Obstáculos: Pedra
 
-### Sistema de XP e Níveis
-- Barra de XP preenchida com o tempo de sobrevivência
-- A cada nível a EXP necessária aumenta
-- Nível alcançado é salvo ao morrer
-
 ### Loja Pós-Morte
 - A cada morte o jogador ganha 1 compra disponível
 - Itens disponíveis:
@@ -61,7 +56,6 @@ O **RPG Runner** é um endless runner 3D com elementos de RPG desenvolvido em Un
 ### HUD
 - Avatar e classe do personagem selecionado
 - Corações de vida 
-- Barra de XP (azul)
 - Tempo sobrevivido
 - Botão de pause 
 
@@ -69,7 +63,7 @@ O **RPG Runner** é um endless runner 3D com elementos de RPG desenvolvido em Un
 - Seleção de personagem com animações (Idle (Personagens não selecionados) / Waving (Personagem selecionado))
 - Tela de instruções
 - Botão de sair
-- **Botão PERSONALIZAR** (XP Week Halloween): o aluno escolhe a skin do personagem entre os assets da pasta `Assets/Resources/HalloweenAssets`
+- **Botão PERSONALIZAR** (XP Week Halloween, abaixo do botão de instruções): o aluno escolhe a skin do personagem entre os assets da pasta `Assets/Resources/HalloweenAssets`
 
 ### Personalização de Skins (Halloween)
 - As skins são texturas `.png` na pasta `Assets/Resources/HalloweenAssets`, no padrão `<classe>_<skin>.png` (ex.: `mage_abobora.png`; classes: `knight`, `barbarian`, `mage`)
