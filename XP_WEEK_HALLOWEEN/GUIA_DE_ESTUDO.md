@@ -46,7 +46,7 @@ Os pontos estão marcados com `// TODO [PASSO N - ...]`.
 
 ## 4. Asset Pack de Halloween e botão PERSONALIZAR (parte "Diretor de Arte")
 
-- No **Menu** há um botão **PERSONALIZAR** (lado esquerdo da tela). Ele abre um painel com todas as skins que estão na pasta
+- No **Menu** há um botão **PERSONALIZAR** (abaixo do botão de instruções, o livro no canto superior direito). Ele abre um painel com todas as skins que estão na pasta
   `Assets/Resources/HalloweenAssets`. Clicar numa skin aplica na hora nos personagens do menu; a escolha vale na partida.
 - Skins incluídas: **Original, Abóbora, Fantasma, Zumbi, Vampiro e Bruxa** — para Lutador, Bárbaro e Mago.
 - **Desafio extra (arte):** o aluno cria uma skin própria colocando um PNG na pasta com o nome `<classe>_<nome>.png`
