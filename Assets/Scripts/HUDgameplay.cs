@@ -14,8 +14,6 @@ public class HUDgameplay : MonoBehaviour
     [SerializeField] private Transform containerCoracoes;
     [SerializeField] private GameObject prefabCoracao;
     
-    [SerializeField] private UnityEngine.UI.Slider barraXP;
-    
     [SerializeField] private TextMeshProUGUI textoTempo;
     
     [SerializeField] private DadosPersonagem[] personagens;
@@ -64,7 +62,6 @@ public class HUDgameplay : MonoBehaviour
     {
         int indice = PlayerPrefs.GetInt("PersonagemEscolhido", 0);
         ConfigurarPerso(indice);
-        AtualizarXP(0f);
     }
     
     public void ConfigurarPerso(int indice)
@@ -115,10 +112,6 @@ public class HUDgameplay : MonoBehaviour
         }
     }
     
-    public void AtualizarXP(float porcentagem)
-    {
-        barraXP.value = Mathf.Clamp01(porcentagem); //clamp01 é pra normalizar o valor (pode ser so clamp tambem)
-    }
     private void AtualizarTempo()
     {
         int minutos = Mathf.FloorToInt(tempoSobrevivido / 60f);
