@@ -28,9 +28,10 @@ CLASSES = {
     "mage": BASE / "Mage/mage_texture.png",
 }
 
-# skin -> (matiz alvo em graus, mult. saturacao, mult. brilho, cor p/ tingir cinzas, forca do tingimento)
+# skin -> (matiz alvo em graus, mult. saturacao, mult. brilho, cor p/ tingir cinzas, forca do tingimento
+#          [, variacao do matiz em graus; padrao 25 -- menor = cores mais uniformes])
 TEMAS = {
-    "abobora":  (28.0, 1.55, 1.05, (255, 130, 20), 0.40),
+    "abobora":  (26.0, 1.85, 1.08, (255, 120, 10), 0.60, 8.0),
     "fantasma": (190.0, 0.25, 1.30, (190, 230, 255), 0.40),
     "zumbi":    (100.0, 0.85, 0.85, (110, 140, 70), 0.28),
     "vampiro":  (352.0, 1.10, 0.85, (90, 10, 20), 0.30),
@@ -66,12 +67,12 @@ def hsv_para_rgb(h, s, v):
     return np.stack([r, g, b], -1)
 
 
-def aplicar_tema(img, matiz, mult_s, mult_v, cor_tinta, forca_tinta):
+def aplicar_tema(img, matiz, mult_s, mult_v, cor_tinta, forca_tinta, variacao=25.0):
     arr = np.asarray(img.convert("RGBA"), dtype=np.float64) / 255.0
     rgb, alfa = arr[..., :3], arr[..., 3:]
     h, s, v = rgb_para_hsv(rgb)
     # mantem variedade de cores: o matiz novo varia um pouco conforme o matiz original
-    novo_h = matiz + 25.0 * np.sin(np.radians(h))
+    novo_h = matiz + variacao * np.sin(np.radians(h))
     peso = np.clip((s - 0.08) / 0.17, 0.0, 1.0)      # pixels coloridos trocam de matiz
     h2 = np.where(peso > 0, novo_h, h)
     s2 = np.clip(s * mult_s, 0, 1)
